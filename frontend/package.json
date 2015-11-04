@@ -51,6 +51,8 @@
     "expose-loader": "^0.6.0",
     "extract-text-webpack-plugin": "^0.3.8",
     "ng-annotate-loader": "0.0.10",
+    "typescript": "1.6.2",
+    "ts-loader": "0.6.0",
     "file-loader": "^0.8.1",
     "glob": "^4.5.3",
     "html-loader": "^0.2.3",
