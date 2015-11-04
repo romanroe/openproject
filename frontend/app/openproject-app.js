@@ -298,3 +298,4 @@ requireTemplate.keys().forEach(requireTemplate);
 require('!ngtemplate?module=openproject.templates!html!angular-busy/angular-busy.html');
 
 require('./typescript_demo/demo.controller');
+require('./typescript_demo/demo.service');

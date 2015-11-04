@@ -1,8 +1,10 @@
 
 export class DemoService {
 
-    constructor() {
+    constructor($rootScope: angular.IRootScopeService) {
+        "ngInject";
         console.log("start");
+        console.log($rootScope);
     }
 
     method() {
@@ -11,3 +13,5 @@ export class DemoService {
 }
 
 angular.module('openproject').service("demoService", DemoService);
+
+console.log(DemoService);

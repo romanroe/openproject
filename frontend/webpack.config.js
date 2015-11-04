@@ -50,7 +50,7 @@ var browsersList = JSON.stringify(_.filter(browsersListConfig.split('\n'), funct
 }));
 
 var loaders = [
-  { test: /\.ts$/,                    loader: 'ts-loader' },
+  { test: /\.ts$/,                    loaders: ['ng-annotate?map=true', 'ts-loader'] },
   { test: /[\/]angular\.js$/,         loader: 'exports?angular' },
   { test: /[\/]jquery\.js$/,          loader: 'expose?jQuery' },
   { test: /[\/]moment\.js$/,          loader: 'expose?moment' },
