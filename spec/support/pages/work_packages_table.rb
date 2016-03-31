@@ -27,10 +27,10 @@
 #++
 
 require 'support/pages/page'
+require 'support/work_packages/inline_edit_field'
 
 module Pages
   class WorkPackagesTable < Page
-
     attr_reader :project
 
     def initialize(project = nil)
@@ -46,17 +46,31 @@ module Pages
     def open_split_view(work_package)
       split_page = SplitWorkPackage.new(work_package, project)
 
+      loading_indicator_saveguard
       page.driver.browser.mouse.double_click(row(work_package).native)
 
       split_page
     end
 
     def open_full_screen(work_package)
-      row(work_package).check(I18n.t('js.description_select_work_package', id: work_package.id))
+      row(work_package).check(I18n.t('js.description_select_work_package',
+                                     id: work_package.id))
 
       click_button(I18n.t('js.label_activate') + ' ' + I18n.t('js.button_show_view'))
 
       FullWorkPackage.new(work_package)
+    end
+
+    def open_full_screen_by_link(work_package)
+      row(work_package).click_link(work_package.id)
+    end
+
+    def row(work_package)
+      table_container.find("#work-package-#{work_package.id}")
+    end
+
+    def edit_field(work_package, attribute)
+      InlineEditField.new(work_package, attribute)
     end
 
     private
@@ -67,10 +81,6 @@ module Pages
 
     def table_container
       find('#content .work-package-table--container')
-    end
-
-    def row(work_package)
-      table_container.find("#work-package-#{work_package.id}")
     end
   end
 end

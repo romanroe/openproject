@@ -1,10 +1,12 @@
-<div ng-click="vm.isEditable && vm.activate()" class="wp-edit-field">
+<div ng-click="vm.isEditable && vm.activate()" class="wp-edit-field -small"
+     ng-class="{ '-error': vm.errorenous, '-active': vm.active }">
   <form ng-if="vm.workPackage && vm.active"
+        name="vm.wpEditForm"
         ng-submit="vm.submit()">
 
     <ng-include src="vm.field.template"></ng-include>
 
   </form>
 
-  <ng-transclude ng-hide="vm.active"></ng-transclude>
+  <ng-transclude class="-hidden-overflow" ng-hide="vm.active"></ng-transclude>
 </div>

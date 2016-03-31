@@ -1,4 +1,3 @@
-#-- encoding: UTF-8
 #-- copyright
 # OpenProject is a project management system.
 # Copyright (C) 2012-2015 the OpenProject Foundation (OPF)
@@ -27,25 +26,13 @@
 # See doc/COPYRIGHT.rdoc for more details.
 #++
 
-module API
-  module V3
-    module WorkPackages
-      class CreateContract < BaseContract
-        # These attributes need to be set during creation and cannot be modified via representer.
-        # Hence making them writable here is unproblematic.
-        attribute :project_id
-        attribute :author_id
+# Method to manually wait for an asynchronous request (through jQuery) to complete.
+# This applies to all requests through resources as well.
+#
+# Note: Use this only if there are no other means of detecting the sucessful
+# completion of said request.
+#
 
-        validate :user_allowed_to_add
-
-        private
-
-        def user_allowed_to_add
-          unless @user.allowed_to?(:add_work_packages, model.project)
-            errors.add :base, :error_unauthorized
-          end
-        end
-      end
-    end
-  end
+def loading_indicator_saveguard
+  expect(page).to have_no_selector('.cg-busy')
 end

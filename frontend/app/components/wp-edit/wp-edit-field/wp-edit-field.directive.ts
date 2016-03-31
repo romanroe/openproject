@@ -33,12 +33,19 @@ import {Field} from "./wp-edit-field.module";
 
 export class WorkPackageEditFieldController {
   public formCtrl: WorkPackageEditFormController;
+  public wpEditForm:ng.IFormController;
   public fieldName:string;
   public field:Field;
+  public errorenous:boolean;
+  protected pristineValue:any;
 
   protected _active:boolean = false;
 
-  constructor(protected wpEditField:WorkPackageEditFieldService) {
+  constructor(
+    protected wpEditField:WorkPackageEditFieldService,
+    protected $element,
+    protected NotificationsService,
+    protected I18n) {
   }
 
   public get workPackage() {
@@ -50,14 +57,27 @@ export class WorkPackageEditFieldController {
   }
 
   public submit() {
-    this.formCtrl.updateWorkPackage().then(() => {
-      this.deactivate();
-    });
+    this.formCtrl.updateWorkPackage()
+      .then(() => this.deactivate());
   }
 
   public activate() {
+    if (this._active) {
+      return;
+    }
+
+    this.pristineValue = angular.copy(this.workPackage[this.fieldName]);
     this.setupField().then(() => {
       this._active = this.field.schema.writable;
+
+      // Display a generic error if the field turns out not to be editable,
+      // despite the field being editable.
+      if (this.isEditable && !this._active) {
+        this.NotificationsService.addError(this.I18n.t(
+          'js.work_packages.error_edit_prohibited',
+          { attribute: this.field.schema.name }
+        ));
+      }
     });
   }
 
@@ -69,21 +89,52 @@ export class WorkPackageEditFieldController {
     return this._active = false;
   }
 
+  public setErrorState(error = true) {
+    this.errorenous = error;
+    this.$element.toggleClass('-error', error)
+  }
+
+  public reset() {
+    this.workPackage[this.fieldName] = this.pristineValue;
+    this.wpEditForm.$setPristine();
+    this.deactivate();
+    this.pristineValue = null;
+  }
+
   protected setupField():ng.IPromise<any> {
-    return this.formCtrl.loadSchema().then(schema =>  {
+    return this.formCtrl.loadSchema().then(schema => {
       this.field = this.wpEditField.getField(
         this.workPackage, this.fieldName, schema[this.fieldName]);
     });
   }
 }
 
-function wpEditFieldLink(scope, element, attrs, controllers:
-                           [WorkPackageEditFormController, WorkPackageEditFieldController]) {
+function wpEditFieldLink(
+  scope,
+  element,
+  attrs,
+  controllers: [WorkPackageEditFormController, WorkPackageEditFieldController]) {
 
   controllers[1].formCtrl = controllers[0];
+  controllers[1].formCtrl.fields[scope.vm.fieldName] = scope.vm;
 
   element.click(event => {
     event.stopImmediatePropagation();
+  });
+
+  // Mark the td field if it is inline-editable
+  // We're resolving the non-form schema here since its loaded anyway for the table
+  scope.vm.workPackage.schema.$load().then(schema => {
+    if (schema[scope.vm.fieldName].writable) {
+      element.addClass('-editable');
+    }
+  });
+
+  element.addClass(scope.vm.fieldName);
+  element.keyup(event => {
+    if (event.keyCode === 27) {
+      scope.$evalAsync(_ => scope.vm.reset());
+    }
   });
 }
 

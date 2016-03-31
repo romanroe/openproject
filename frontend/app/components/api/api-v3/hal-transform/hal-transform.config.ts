@@ -26,11 +26,12 @@
 // See doc/COPYRIGHT.rdoc for more details.
 // ++
 
-function halTransformConfig(halTransformTypes, HalResource, WorkPackageResource, CollectionResource) {
+function halTransformConfig(halTransformTypes, HalResource, WorkPackageResource, CollectionResource, ErrorResource) {
   angular.extend(halTransformTypes, {
     'default': HalResource,
     WorkPackage: WorkPackageResource,
-    Collection: CollectionResource
+    Collection: CollectionResource,
+    Error: ErrorResource
   });
 }
 

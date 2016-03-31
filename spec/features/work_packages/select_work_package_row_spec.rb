@@ -51,7 +51,8 @@ describe 'Select work package row', type: :feature, js:true, selenium: true do
 
   describe 'Work package row selection', js: true do
     def select_work_package_row(number, mouse_button_behavior = :left)
-      element = find(".work-package-table--container tr:nth-of-type(#{number}).issue")
+      element = find(".work-package-table--container tr:nth-of-type(#{number}).issue td.checkbox")
+      loading_indicator_saveguard
       case mouse_button_behavior
       when :double
         element.double_click
@@ -63,7 +64,8 @@ describe 'Select work package row', type: :feature, js:true, selenium: true do
     end
 
     def select_work_package_row_with_shift(number)
-      element = find(".work-package-table--container tr:nth-of-type(#{number}).issue")
+      element = find(".work-package-table--container tr:nth-of-type(#{number}).issue td.checkbox")
+      loading_indicator_saveguard
 
       page.driver.browser.action.key_down(:shift)
         .click(element.native)
@@ -72,7 +74,8 @@ describe 'Select work package row', type: :feature, js:true, selenium: true do
     end
 
     def select_work_package_row_with_ctrl(number)
-      element = find(".work-package-table--container tr:nth-of-type(#{number}).issue")
+      element = find(".work-package-table--container tr:nth-of-type(#{number}).issue td.checkbox")
+      loading_indicator_saveguard
 
       page.driver.browser.action.key_down(:control)
         .click(element.native)
@@ -120,7 +123,7 @@ describe 'Select work package row', type: :feature, js:true, selenium: true do
 
     describe 'single selection' do
       shared_examples_for 'single select' do
-        before do select_work_package_row(1, mouse_button) end
+        before do select_work_package_row(1, :left) end
 
         it_behaves_like 'work package row selected' do
           let(:index) { 1 }

@@ -213,6 +213,10 @@ function QueryService(Query,
       return this.getQuery().getSelectedColumns();
     },
 
+    getSelectedColumnNames: function() {
+      return this.getSelectedColumns().map(column => column.name);
+    },
+
     setSelectedColumns: function(selectedColumnNames) {
       query.dirty = true;
       var currentColumns = this.getSelectedColumns();
@@ -474,7 +478,10 @@ function QueryService(Query,
         method: method,
         url: url,
         params: params,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        headers: {
+          'caching': { enabled: false },
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       }).then(success, failure);
     },
 

@@ -30,7 +30,7 @@ angular
   .module('openproject.workPackages.directives')
   .directive('wpTable', wpTable);
 
-function wpTable(WorkPackagesTableService, $window, featureFlags, PathHelper, apiWorkPackages, wpSyncEditService){
+function wpTable(WorkPackagesTableService, $window, PathHelper, apiWorkPackages, wpSyncEditService){
   return {
     restrict: 'E',
     replace: true,
@@ -135,12 +135,6 @@ function wpTable(WorkPackagesTableService, $window, featureFlags, PathHelper, ap
         }
       });
 
-      scope.$watch(function() {
-        return featureFlags.isOn('detailsView');
-      }, function(detailsEnabled) {
-        scope.hideWorkPackageDetails = !detailsEnabled;
-      });
-
       // Thanks to http://stackoverflow.com/a/880518
       function clearSelection() {
         if(document.selection && document.selection.empty) {
@@ -189,8 +183,6 @@ function wpTable(WorkPackagesTableService, $window, featureFlags, PathHelper, ap
             setRowSelectionState(row, multipleChecked ? true : !currentRowCheckState);
           } else {
             setRowSelectionState(row, multipleChecked ? true : !currentRowCheckState);
-
-            scope.activationCallback({ id: row.object.id, force: false });
           }
         }
       };
