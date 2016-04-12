@@ -179,7 +179,7 @@ function wpTable(WorkPackagesTableService, $window, PathHelper, apiWorkPackages,
           if ($event.shiftKey) {
             clearSelection();
             activeSelectionBorderIndex = WorkPackagesTableService.selectRowRange(scope.rows, row, activeSelectionBorderIndex);
-          } else if($event.ctrlKey || $event.metaKey){
+          } else if($event.ctrlKey){
             setRowSelectionState(row, multipleChecked ? true : !currentRowCheckState);
           } else {
             setRowSelectionState(row, multipleChecked ? true : !currentRowCheckState);
@@ -193,7 +193,7 @@ function wpTable(WorkPackagesTableService, $window, PathHelper, apiWorkPackages,
         scope.setCheckedStateForAllRows(false);
 
         setRowSelectionState(row, true);
-        
+
         scope.activationCallback({ id: row.object.id, force: true });
       };
     }
