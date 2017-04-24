@@ -40,6 +40,7 @@ import Moment = moment.Moment;
 const cssClassTableBody = ".work-package-table";
 const cssClassTableContainer = ".generic-table--results-container";
 const cssClassHeader = ".wp-timeline-header";
+const cssClassBackground = ".wp-timeline-background";
 const cssHeaderContainer = ".wp-timeline-header-container";
 const scrollBarHeight = 16;
 
@@ -56,6 +57,9 @@ export class WpTimelineHeader {
   private globalElements: {[type: string]: HTMLElement} = {};
 
   private headerCell: HTMLElement;
+
+  private backgroundDiv: HTMLElement;
+
   private outerHeader: JQuery;
 
   /** UI Scrollbar */
@@ -198,6 +202,7 @@ export class WpTimelineHeader {
   private lazyInit() {
     if (this.headerCell === undefined) {
       this.headerCell = jQuery(cssClassHeader)[0];
+      this.backgroundDiv = jQuery(cssClassBackground)[0];
       this.outerHeader = jQuery(cssHeaderContainer);
       this.setupScrollbar();
     }
@@ -236,7 +241,7 @@ export class WpTimelineHeader {
   }
 
   private renderLabelsDays(vp: TimelineViewParameters) {
-    this.renderTimeSlices(vp, "month", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "month", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("MMM YYYY");
       cell.style.borderTop = `1px solid ${colorGrey1}`;
       cell.style.fontWeight = "bold";
@@ -244,32 +249,44 @@ export class WpTimelineHeader {
       cell.style.height = "13px";
     });
 
-    this.renderTimeSlices(vp, "week", 13, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "week", 13, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("ww");
       cell.style.borderColor = `${colorGrey1}`;
       cell.style.borderTop = `1px solid ${colorGrey1}`;
-      cell.style.height = (this.globalHeight - 10) + "px";
+      cell.style.height = "23px";
+      // cell.style.height = (this.globalHeight - 10) + "px";
       cell.style.zIndex = "2";
     });
 
-    this.renderTimeSlices(vp, "day", 23, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "day", 23, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("D");
       cell.style.borderColor = `${colorGrey2}`;
       cell.style.zIndex = "1";
-      cell.style.height = (this.globalHeight - 20) + "px";
+      cell.style.height = "13px";
+      // cell.style.height = (this.globalHeight - 20) + "px";
       cell.style.borderTop = `1px solid ${colorGrey1}`;
     });
 
-    this.renderTimeSlices(vp, "day", 33, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "day", 33, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("dd");
       cell.style.height = "12px";
       cell.style.paddingTop = "1px";
       cell.style.borderBottom = `1px solid ${colorGrey1}`;
     });
+
+    this.renderTimeSlices(this.backgroundDiv, vp, "week", 13, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+      cell.style.borderColor = `${colorGrey1}`;
+      cell.style.borderTop = `1px solid ${colorGrey1}`;
+      // cell.style.height = "13px";
+      cell.style.height = "100vh";
+      // cell.style.height = (this.globalHeight - 10) + "px";
+      cell.style.zIndex = "2";
+    });
+
   }
 
   private renderLabelsWeeks(vp: TimelineViewParameters) {
-    this.renderTimeSlices(vp, "month", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "month", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.style.borderTop = `1px solid ${colorGrey1}`;
       cell.innerHTML = start.format("MMM YYYY");
       cell.style.fontWeight = "bold";
@@ -277,7 +294,7 @@ export class WpTimelineHeader {
       cell.style.height = "15px";
     });
 
-    this.renderTimeSlices(vp, "week", 15, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "week", 15, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("ww");
       cell.style.borderColor = `${colorGrey1}`;
       cell.style.borderTop = `1px solid ${colorGrey1}`;
@@ -285,7 +302,7 @@ export class WpTimelineHeader {
       cell.style.zIndex = "2";
     });
 
-    this.renderTimeSlices(vp, "day", 25, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "day", 25, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("D");
       cell.style.borderColor = `${colorGrey1}`;
       cell.style.borderTop = `1px solid ${colorGrey1}`;
@@ -296,7 +313,7 @@ export class WpTimelineHeader {
   }
 
   private renderLabelsMonths(vp: TimelineViewParameters) {
-    this.renderTimeSlices(vp, "year", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "year", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.style.borderTop = `1px solid ${colorGrey1}`;
       cell.innerHTML = start.format("YYYY");
       cell.style.fontWeight = "bold";
@@ -304,14 +321,14 @@ export class WpTimelineHeader {
       cell.style.height = "15px";
     });
 
-    this.renderTimeSlices(vp, "month", 15, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "month", 15, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("MMM");
       cell.style.borderColor = `${colorGrey2}`;
       cell.style.borderTop = `1px solid ${colorGrey1}`;
       cell.style.height = (this.globalHeight - 10) + "px";
     });
 
-    this.renderTimeSlices(vp, "week", 25, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "week", 25, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("ww");
       cell.style.borderColor = `${colorGrey1}`;
       cell.style.borderTop = `1px solid ${colorGrey1}`;
@@ -323,7 +340,7 @@ export class WpTimelineHeader {
   }
 
   private renderLabelsQuarters(vp: TimelineViewParameters) {
-    this.renderTimeSlices(vp, "year", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "year", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.style.borderTop = `1px solid ${colorGrey1}`;
       cell.innerHTML = start.format("YYYY");
       cell.style.fontWeight = "bold";
@@ -331,14 +348,14 @@ export class WpTimelineHeader {
       cell.style.height = "15px";
     });
 
-    this.renderTimeSlices(vp, "quarter", 15, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "quarter", 15, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = "Q" + start.format("Q");
       cell.style.borderColor = `${colorGrey2}`;
       cell.style.borderTop = `1px solid ${colorGrey1}`;
       cell.style.height = (this.globalHeight - 10) + "px";
     });
 
-    this.renderTimeSlices(vp, "month", 25, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "month", 25, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("MMM");
       cell.style.height = "25px";
       cell.style.borderColor = `${colorGrey2}`;
@@ -350,7 +367,7 @@ export class WpTimelineHeader {
   }
 
   private renderLabelsYears(vp: TimelineViewParameters) {
-    this.renderTimeSlices(vp, "year", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "year", 0, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("YYYY");
       cell.style.borderTop = `1px solid ${colorGrey1}`;
       cell.style.borderColor = `${colorGrey1}`;
@@ -360,14 +377,14 @@ export class WpTimelineHeader {
       cell.style.height = "15px";
     });
 
-    this.renderTimeSlices(vp, "quarter", 15, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "quarter", 15, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = "Q" + start.format("Q");
       cell.style.borderColor = `${colorGrey2}`;
       cell.style.borderTop = `1px solid ${colorGrey1}`;
       cell.style.height = (this.globalHeight - 10) + "px";
     });
 
-    this.renderTimeSlices(vp, "month", 25, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
+    this.renderTimeSlices(this.headerCell, vp, "month", 25, vp.dateDisplayStart, vp.dateDisplayEnd, (start, cell) => {
       cell.innerHTML = start.format("M");
       cell.style.borderColor = `${colorGrey2}`;
       cell.style.borderTop = `1px solid ${colorGrey1}`;
@@ -378,7 +395,8 @@ export class WpTimelineHeader {
     });
   }
 
-  renderTimeSlices(vp: TimelineViewParameters,
+  renderTimeSlices(parent: HTMLElement,
+                   vp: TimelineViewParameters,
                    unit: moment.unitOfTime.DurationConstructor,
                    marginTop: number,
                    startView: Moment,
@@ -398,7 +416,7 @@ export class WpTimelineHeader {
     }
 
     for (let [start, end] of slices) {
-      const cell = this.addLabelCell();
+      const cell = this.addLabelCell(parent);
       cell.style.borderRight = `1px solid ${colorGrey1}`;
       cell.style.top = marginTop + "px";
       cell.style.left = calculatePositionValueForDayCount(vp, start.diff(startView, "days"));
@@ -409,7 +427,7 @@ export class WpTimelineHeader {
     }
   }
 
-  private addLabelCell(): HTMLElement {
+  private addLabelCell(parent: HTMLElement): HTMLElement {
     const label = document.createElement("div");
     label.className = timelineElementCssClass;
     label.style.position = "absolute";
@@ -418,7 +436,7 @@ export class WpTimelineHeader {
     label.style.top = "0px";
     label.style.left = "0px";
     label.style.lineHeight = "normal";
-    this.headerCell.appendChild(label);
+    parent.appendChild(label);
     return label;
   }
 

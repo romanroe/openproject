@@ -86,8 +86,11 @@ export class WorkPackageTable {
    */
   public refreshBody() {
     let newBody = this.rowBuilder.buildRows(this);
-
     this.tbody.innerHTML = '';
+
+    // const row = document.createElement("tr");
+    // this.tbody.appendChild(row);
+
     this.tbody.appendChild(newBody);
   }
 
