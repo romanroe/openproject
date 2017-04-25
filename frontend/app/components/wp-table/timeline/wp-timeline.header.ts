@@ -278,7 +278,7 @@ export class WpTimelineHeader {
       cell.style.borderColor = `${colorGrey1}`;
       cell.style.borderTop = `1px solid ${colorGrey1}`;
       // cell.style.height = "13px";
-      cell.style.height = "100vh";
+      cell.style.height = "50vh";
       // cell.style.height = (this.globalHeight - 10) + "px";
       cell.style.zIndex = "2";
     });
